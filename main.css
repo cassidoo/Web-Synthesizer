@@ -18,6 +18,18 @@ p
 	line-height: 1.8 rem;
 }
 
+#cursorglow
+{
+	position: fixed;
+	display: none;
+	width: 5px;
+	height: 5px;
+	border-radius: 50px;
+	background-color: #381C85;
+	box-shadow: 0px 0px 50px 50px #381C85;
+	z-index: 5;
+}
+
 #page-wrapper
 {
 	width: 875px;
@@ -34,6 +46,7 @@ p
 	width: 500px;
 	height: 500px;
 	background: #18171C url(synthbg.png);
+	z-index: 0;
 }
 
 #synth-pad:hover
@@ -49,6 +62,7 @@ p
 	-moz-user-select: none;
 	-webkit-user-select: none;
 	-ms-user-select: none;
+	z-index: 10;
 }
 
 .clearfix
