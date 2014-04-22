@@ -41,10 +41,6 @@ var SynthPad = (function()
         c.addEventListener('mouseup', SynthPad.stopSound);
         document.addEventListener('mouseleave', SynthPad.stopSound);
         c.addEventListener('touchend', SynthPad.stopSound);
-        
-        c.addEventListener('mousedown', SynthPad.startGlow);
-        c.addEventListener('mouseup', SynthPad.stopGlow);
-        document.addEventListener('mouseleave', SynthPad.stopGlow);
     };
 
     SynthPad.playSound = function(event)
@@ -65,19 +61,20 @@ var SynthPad = (function()
 
         oscillator.start(0);
 
+        SynthPad.startGlow(event);
+
         c.addEventListener('mousemove', SynthPad.updateFrequency);
         c.addEventListener('touchmove', SynthPad.updateFrequency);
 
-        c.addEventListener('mousemove', SynthPad.updateGlow);
-
         c.addEventListener('mouseout', SynthPad.stopSound);
-        
-        //c.addEventListener('mouseout', SynthPad.stopGlow);
+
     };
 
     SynthPad.stopSound = function(event)
     {
         oscillator.stop(0);
+
+        SynthPad.stopGlow(event);
 
         c.removeEventListener('mousemove', SynthPad.updateFrequency);
         c.removeEventListener('touchmove', SynthPad.updateFrequency);
@@ -113,6 +110,7 @@ var SynthPad = (function()
         if(event.type == 'mousedown' || event.type == 'mousemove')
         {
             SynthPad.calculateFrequency(event.x, event.y);
+            SynthPad.updateGlow(event);
         }
         else if(event.type == 'touchstart' || event.type == 'touchmove')
         {
@@ -122,20 +120,29 @@ var SynthPad = (function()
 
     SynthPad.startGlow = function(event)
     {
-        document.getElementById("cursorglow").style.display = "block";
+        if(event.type == 'mousedown' || event.type == 'mousemove')
+        {
+            document.getElementById("cursorglow").style.display = "block";
+        }
     };
 
     SynthPad.updateGlow = function(event)
     {
-        var cursorx = event.clientX;
-        var cursory = event.clientY;
-        document.getElementById("cursorglow").style.left = cursorx + "px";
-        document.getElementById("cursorglow").style.top = cursory + "px";
+        if(event.type == 'mousedown' || event.type == 'mousemove')
+        {
+            var cursorx = event.clientX;
+            var cursory = event.clientY;
+            document.getElementById("cursorglow").style.left = cursorx + "px";
+            document.getElementById("cursorglow").style.top = cursory + "px";
+        }
     };
-    
+
     SynthPad.stopGlow = function(event)
     {
-        document.getElementById("cursorglow").style.display = "none";
+        if(event.type == 'mouseup' || event.type == 'mouseout')
+        {
+            document.getElementById("cursorglow").style.display = "none";
+        }
     };
 
     return SynthPad;
