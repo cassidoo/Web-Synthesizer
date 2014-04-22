@@ -3,7 +3,8 @@ var SynthPad = (function()
     var c;
     var frequencyLabel;
     var volumeLabel;
-
+    var waveType;
+    
     var myAudioContext;
     var oscillator;
     var gainNode;
@@ -13,13 +14,14 @@ var SynthPad = (function()
     // C4
     var highNote = 493.88;
     // B4
-
+    
     // Constructor
     var SynthPad = function()
     {
         c = document.getElementById('synth-pad');
         frequencyLabel = document.getElementById('frequency');
         volumeLabel = document.getElementById('volume');
+        waveType = document.getElementById('sounds');
 
         // Context
         myAudioContext = new webkitAudioContext();
@@ -34,7 +36,9 @@ var SynthPad = (function()
         {
             event.preventDefault();
         }, false);
-
+        
+        waveType.addEventListener('onchange', SynthPad.updateSound);
+        
         c.addEventListener('mousedown', SynthPad.playSound);
         c.addEventListener('touchstart', SynthPad.playSound);
 
@@ -50,7 +54,7 @@ var SynthPad = (function()
         gainNode = myAudioContext.createGainNode();
         // fx
 
-        oscillator.type = 'triangle';
+        oscillator.type = document.getElementById('sounds').value;
         //sine, square, sawtooth, triangle, and custom.
 
         gainNode.connect(myAudioContext.destination);
@@ -61,7 +65,7 @@ var SynthPad = (function()
 
         oscillator.start(0);
 
-        SynthPad.startGlow(event);
+        //SynthPad.startGlow(event);
 
         c.addEventListener('mousemove', SynthPad.updateFrequency);
         c.addEventListener('touchmove', SynthPad.updateFrequency);
@@ -74,7 +78,7 @@ var SynthPad = (function()
     {
         oscillator.stop(0);
 
-        SynthPad.stopGlow(event);
+        //SynthPad.stopGlow(event);
 
         c.removeEventListener('mousemove', SynthPad.updateFrequency);
         c.removeEventListener('touchmove', SynthPad.updateFrequency);
@@ -110,40 +114,45 @@ var SynthPad = (function()
         if(event.type == 'mousedown' || event.type == 'mousemove')
         {
             SynthPad.calculateFrequency(event.x, event.y);
-            SynthPad.updateGlow(event);
+            //SynthPad.updateGlow(event);
         }
         else if(event.type == 'touchstart' || event.type == 'touchmove')
         {
             SynthPad.calculateFrequency(event.touches[0].pageX, event.touches[0].pageY);
         }
     };
-
-    SynthPad.startGlow = function(event)
+    
+    SynthPad.updateSound = function(event)
     {
-        if(event.type == 'mousedown' || event.type == 'mousemove')
-        {
-            document.getElementById("cursorglow").style.display = "block";
-        }
+        oscillator.type = document.getElementById('sounds').value;
     };
 
-    SynthPad.updateGlow = function(event)
-    {
-        if(event.type == 'mousedown' || event.type == 'mousemove')
-        {
-            var cursorx = event.clientX;
-            var cursory = event.clientY;
-            document.getElementById("cursorglow").style.left = cursorx + "px";
-            document.getElementById("cursorglow").style.top = cursory + "px";
-        }
-    };
+    /*SynthPad.startGlow = function(event)
+     {
+     if(event.type == 'mousedown' || event.type == 'mousemove')
+     {
+     document.getElementById("cursorglow").style.display = "block";
+     }
+     };
 
-    SynthPad.stopGlow = function(event)
-    {
-        if(event.type == 'mouseup' || event.type == 'mouseout')
-        {
-            document.getElementById("cursorglow").style.display = "none";
-        }
-    };
+     SynthPad.updateGlow = function(event)
+     {
+     if(event.type == 'mousedown' || event.type == 'mousemove')
+     {
+     var cursorx = event.clientX;
+     var cursory = event.clientY;
+     document.getElementById("cursorglow").style.left = cursorx + "px";
+     document.getElementById("cursorglow").style.top = cursory + "px";
+     }
+     };
+
+     SynthPad.stopGlow = function(event)
+     {
+     if(event.type == 'mouseup' || event.type == 'mouseout')
+     {
+     document.getElementById("cursorglow").style.display = "none";
+     }
+     };*/
 
     return SynthPad;
 

@@ -10,12 +10,18 @@ html, body
 
 h1
 {
-	font-weight: normal;
+	/*font-weight: normal;*/
 }
 
 p
 {
 	line-height: 1.8 rem;
+}
+
+select
+{
+	width: 100%;
+	max-width: 300px;
 }
 
 #cursorglow
