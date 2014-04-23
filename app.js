@@ -4,7 +4,7 @@ var SynthPad = (function()
     var frequencyLabel;
     var volumeLabel;
     var waveType;
-    
+
     var myAudioContext;
     var oscillator;
     var gainNode;
@@ -14,7 +14,7 @@ var SynthPad = (function()
     // C4
     var highNote = 493.88;
     // B4
-    
+
     // Constructor
     var SynthPad = function()
     {
@@ -23,8 +23,15 @@ var SynthPad = (function()
         volumeLabel = document.getElementById('volume');
         waveType = document.getElementById('sounds');
 
-        // Context
-        myAudioContext = new webkitAudioContext();
+        try
+        {
+            // Context
+            myAudioContext = new webkitAudioContext();
+        }
+        catch (e)
+        {
+            alert("You don't have web audio oscillator support in this browser!");
+        }
 
         SynthPad.setupEventListeners();
     };
@@ -36,9 +43,9 @@ var SynthPad = (function()
         {
             event.preventDefault();
         }, false);
-        
+
         waveType.addEventListener('onchange', SynthPad.updateSound);
-        
+
         c.addEventListener('mousedown', SynthPad.playSound);
         c.addEventListener('touchstart', SynthPad.playSound);
 
@@ -64,6 +71,8 @@ var SynthPad = (function()
         SynthPad.updateFrequency(event);
 
         oscillator.start(0);
+        
+        document.getElementById("cursorglow").style.display = "block";
 
         //SynthPad.startGlow(event);
 
@@ -115,13 +124,18 @@ var SynthPad = (function()
         {
             SynthPad.calculateFrequency(event.x, event.y);
             //SynthPad.updateGlow(event);
+
+            var cursorx = event.clientX;
+            var cursory = event.clientY;
+            document.getElementById("cursorglow").style.left = cursorx + "px";
+            document.getElementById("cursorglow").style.top = cursory + "px";
         }
         else if(event.type == 'touchstart' || event.type == 'touchmove')
         {
             SynthPad.calculateFrequency(event.touches[0].pageX, event.touches[0].pageY);
         }
     };
-    
+
     SynthPad.updateSound = function(event)
     {
         oscillator.type = document.getElementById('sounds').value;
